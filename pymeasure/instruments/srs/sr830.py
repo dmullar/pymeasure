@@ -155,7 +155,7 @@ class SR830(Instrument):
     )
     input_config = Instrument.control(
         "ISRC?", "ISRC %d",
-        """ An string property that controls the input configuration. Allowed
+        """ A string property that controls the input configuration. Allowed
         values are: {}""".format(INPUT_CONFIGS),
         validator=strict_discrete_set,
         values=INPUT_CONFIGS,
@@ -163,7 +163,7 @@ class SR830(Instrument):
     )
     input_grounding = Instrument.control(
         "IGND?", "IGND %d",
-        """ An string property that controls the input shield grounding. Allowed
+        """ A string property that controls the input shield grounding. Allowed
         values are: {}""".format(INPUT_GROUNDINGS),
         validator=strict_discrete_set,
         values=INPUT_GROUNDINGS,
@@ -171,7 +171,7 @@ class SR830(Instrument):
     )
     input_coupling = Instrument.control(
         "ICPL?", "ICPL %d",
-        """ An string property that controls the input coupling. Allowed
+        """ A string property that controls the input coupling. Allowed
         values are: {}""".format(INPUT_COUPLINGS),
         validator=strict_discrete_set,
         values=INPUT_COUPLINGS,
@@ -179,7 +179,7 @@ class SR830(Instrument):
     )
     input_notch_config = Instrument.control(
         "ILIN?", "ILIN %d",
-        """ An string property that controls the input line notch filter 
+        """ A string property that controls the input line notch filter 
         status. Allowed values are: {}""".format(INPUT_NOTCH_CONFIGS),
         validator=strict_discrete_set,
         values=INPUT_NOTCH_CONFIGS,
@@ -187,7 +187,7 @@ class SR830(Instrument):
     )
     reference_source = Instrument.control(
         "FMOD?", "FMOD %d",
-        """ An string property that controls the reference source. Allowed
+        """ A string property that controls the reference source. Allowed
         values are: {}""".format(REFERENCE_SOURCES),
         validator=strict_discrete_set,
         values=REFERENCE_SOURCES,
