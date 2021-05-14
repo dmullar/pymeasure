@@ -60,6 +60,7 @@ class SR830(Instrument):
     SNAP_ENUMERATION = {"x": 1, "y": 2, "r": 3, "theta": 4,
                         "aux in 1": 5, "aux in 2": 6, "aux in 3": 7, "aux in 4": 8,
                         "frequency": 9, "ch1": 10, "ch2": 11}
+    INPUT_FILTER = ['Off', 'On']
 
     sine_voltage = Instrument.control(
         "SLVL?", "SLVL%0.3f",
@@ -193,7 +194,15 @@ class SR830(Instrument):
         values=REFERENCE_SOURCES,
         map_values=True
     )
-
+    filter_synchronous = Instrument.control(
+        "SYNC?", "SYNC %d",
+        """ A string property that controls the state of the synchronous filter.
+        Synchronous filtering is active only below a detection frequency of 200 Hz. 
+        Allowed values are: {}""".format(INPUT_FILTER),
+        validator=strict_discrete_set,
+        values=INPUT_FILTER,
+        map_values=True
+    )
     aux_out_1 = Instrument.control(
         "AUXV?1;", "AUXV1,%f;",
         """ A floating point property that controls the output of Aux output 1 in
