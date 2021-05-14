@@ -35,7 +35,7 @@ class SR830(Instrument):
 
     SAMPLE_FREQUENCIES = [
         62.5e-3, 125e-3, 250e-3, 500e-3, 1, 2, 4, 8, 16,
-        32, 64, 128, 256, 512
+        32, 64, 128, 256, 512, 'Trigger'
     ]
     SENSITIVITIES = [
         2e-9, 5e-9, 10e-9, 20e-9, 50e-9, 100e-9, 200e-9,
@@ -203,6 +203,16 @@ class SR830(Instrument):
         values=INPUT_FILTER,
         map_values=True
     )
+    buffer_sample_rate = Instrument.control(
+        "SRAT?", "SRAT %d",
+        """ A string property that controls the sample rate of the buffer in Hz
+        or allows the samples to be triggered by an external TTL trigger
+        or software trigger. 
+        Allowed values are: {}.""".format(SAMPLE_FREQUENCIES),
+        validator=strict_discrete_set,
+        values=SAMPLE_FREQUENCIES,
+        map_values=True
+    )
     aux_out_1 = Instrument.control(
         "AUXV?1;", "AUXV1,%f;",
         """ A floating point property that controls the output of Aux output 1 in
@@ -326,26 +336,6 @@ class SR830(Instrument):
         offset, expand = self.get_scaling(channel)
         sensitivity = self.sensitivity
         return lambda x: (x/(10.*expand) + offset) * sensitivity
-
-    @property
-    def sample_frequency(self):
-        """ Gets the sample frequency in Hz """
-        index = int(self.ask("SRAT?"))
-        if index == 14:
-            return None  # Trigger
-        else:
-            return SR830.SAMPLE_FREQUENCIES[index]
-
-    @sample_frequency.setter
-    def sample_frequency(self, frequency):
-        """Sets the sample frequency in Hz (None is Trigger)"""
-        assert type(frequency) in [float, int, type(None)]
-        if frequency is None:
-            index = 14  # Trigger
-        else:
-            frequency = discreteTruncate(frequency, SR830.SAMPLE_FREQUENCIES)
-            index = SR830.SAMPLE_FREQUENCIES.index(frequency)
-        self.write("SRAT%f" % index)
 
     def aquireOnTrigger(self, enable=True):
         self.write("TSTR%d" % enable)
