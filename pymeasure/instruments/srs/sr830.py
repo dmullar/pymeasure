@@ -154,6 +154,14 @@ class SR830(Instrument):
         validator=strict_discrete_set,
         values=range(1, 19999),
     )
+    reserve = Instrument.control(
+        "RMOD?", "RMOD%d",
+        """ A string property that controls the reserve value.
+        Allowed values are: {}""".format(RESERVE_VALUES),
+        validator=strict_discrete_set,
+        values=RESERVE_VALUES,
+        map_values=True
+    )
     input_config = Instrument.control(
         "ISRC?", "ISRC %d",
         """ A string property that controls the input configuration. Allowed
@@ -339,18 +347,6 @@ class SR830(Instrument):
 
     def aquireOnTrigger(self, enable=True):
         self.write("TSTR%d" % enable)
-
-    @property
-    def reserve(self):
-        return SR830.RESERVE_VALUES[int(self.ask("RMOD?"))]
-
-    @reserve.setter
-    def reserve(self, reserve):
-        if reserve not in SR830.RESERVE_VALUES:
-            index = 1
-        else:
-            index = SR830.RESERVE_VALUES.index(reserve)
-        self.write("RMOD%d" % index)
 
     def is_out_of_range(self):
         """ Returns True if the magnitude is out of range
